@@ -1,6 +1,6 @@
 # PC Studio Control
 
-Serveur MCP local pour piloter les logiciels créatifs installés sur ton PC Windows depuis un client compatible MCP (ChatGPT Desktop/Codex ou ZCode Desktop).
+Serveur MCP local pour piloter les logiciels créatifs installés sur ton PC Windows depuis un client compatible MCP (ChatGPT Desktop/Codex, GitHub Copilot dans VS Code (y compris Copilot Free) ou ZCode Desktop).
 
 ## Fonctions
 
@@ -44,6 +44,27 @@ args = ['C:\Users\7erro\OneDrive\Documents\Codage\pcstudiocontrolchatgpt\server.
 ```
 
 Redémarre le client après modification et vérifie que le serveur MCP apparaît dans la liste des serveurs connectés. La disponibilité du MCP local dépend du client et de son mode d'exécution local ; ChatGPT Web dans un navigateur ne peut pas démarrer directement un processus sur ce PC.
+
+## Visual Studio Code / GitHub Copilot (y compris Copilot Free)
+
+Le dépôt inclut `.vscode/mcp.json`. VS Code détecte automatiquement ce fichier à l'ouverture du dépôt et peut démarrer le serveur MCP local pour Copilot.
+
+**Configuration prévue pour ce PC :**
+- Python : `C:\\Program Files\\Python311\\python.exe`
+- Script : `${workspaceFolder}\\server.py` (chemin relatif au dépôt, donc le dossier du dépôt peut être déplacé)
+- Workspace : `C:\\Users\\7erro\\PCStudioWorkspace`
+
+**Activation dans VS Code :**
+1. Ouvre le dossier du dépôt dans VS Code.
+2. Ouvre le fichier `.vscode/mcp.json` et clique sur **Start** en haut du fichier, ou utilise la palette de commandes `Ctrl+Shift+P` puis **MCP: List Servers**.
+3. Accepte le démarrage du serveur local lorsque VS Code le demande.
+4. Ouvre Copilot Chat et sélectionne le mode **Agent**.
+5. Ouvre le sélecteur d'outils et vérifie que **pcStudioControl** apparaît. Active ses outils.
+6. Essaie : « Utilise PC Studio Control pour afficher les logiciels disponibles », puis « Ouvre Audacity ».
+
+**Copilot Free :** le support MCP de VS Code est disponible sur les forfaits Copilot, y compris Free. Le forfait gratuit conserve toutefois ses propres limites d'utilisation de Copilot ; PC Studio Control ne les augmente pas. Il faut une version récente de VS Code (1.99 ou ultérieure) et une session Copilot connectée.
+
+Le serveur tourne localement sur ton PC via Python ; aucune clé API Copilot n'est à ajouter au dépôt. Ne publie jamais de jeton, mot de passe ou cookie.
 
 ## ZCode Desktop
 
