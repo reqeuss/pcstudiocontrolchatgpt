@@ -1,10 +1,13 @@
 {
   "mcpServers": {
     "pc-studio-control": {
-      "command": "python",
-      "args": ["C:/CHEMIN/ABSOLU/pcstudiocontrolchatgpt/server.py"],
+      "type": "stdio",
+      "command": "C:\\Program Files\\Python311\\python.exe",
+      "args": [
+        "C:\\Users\\7erro\\OneDrive\\Documents\\Codage\\pcstudiocontrolchatgpt\\server.py"
+      ],
       "env": {
-        "PC_STUDIO_WORKSPACE": "C:/Users/VOTRE_NOM/PCStudioWorkspace",
+        "PC_STUDIO_WORKSPACE": "C:\\Users\\7erro\\PCStudioWorkspace",
         "COMFYUI_URL": "http://127.0.0.1:8188"
       }
     }
