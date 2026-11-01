@@ -1,45 +1,93 @@
 # PC Studio Control
 
-Agent local Windows pour orchestrer un studio créatif depuis un hôte compatible MCP.
+Serveur MCP local pour piloter les logiciels créatifs installés sur ton PC Windows depuis un client compatible MCP (ChatGPT Desktop/Codex ou ZCode Desktop).
 
-> **Prototype testable 0.1.0.** Ce dépôt fournit un serveur MCP local et un lanceur Windows. Il ne crée pas de tunnel Internet et ne donne pas à ChatGPT Web un accès direct au PC : l'application hôte doit pouvoir démarrer un serveur MCP local (stdio).
+## Fonctions
 
-## Fonctionnalités
-- Inventaire de FFmpeg, FFprobe, Blender, Audacity et ComfyUI.
-- Ouvrir Blender et Audacity.
-- Lire/lister/créer des fichiers dans un espace de travail dédié.
-- Exécuter FFmpeg avec garde-fous et sans écrasement forcé.
-- Vérifier ComfyUI via son API locale.
-- Créer des dossiers de projet.
+- Détection des logiciels et chemins d'installation.
+- Lancement de **Bforartists**, **Audacity**, **DaVinci Resolve** et **FL Studio**.
+- Ouverture de **Google Chrome en mode Invité**, avec URL HTTP(S) facultative.
+- **FFmpeg** : traitement de médias locaux dans l'espace de travail, sans écrasement.
+- **FFprobe** : lecture des métadonnées d'un média.
+- **ComfyUI** : vérification de l'API locale.
+- Création, lecture et liste de fichiers dans le workspace.
 
-## Installation Windows
-1. Installer Python 3.11 ou plus récent.
-2. Télécharger/cloner ce dépôt.
-3. Double-cliquer sur `INSTALL.bat`.
-4. Lancer `START.bat` pour vérifier les dépendances.
-5. Dans un client MCP compatible, enregistrer le serveur comme décrit dans `mcp.example.json`, en remplaçant le chemin par le chemin absolu du dépôt.
+## Configuration incluse pour ce PC
 
-Le serveur MCP utilise **stdio** : il est démarré par le client MCP, pas par un service distant.
+Le fichier `pc-studio.config.json` contient les chemins Windows communiqués pour ce PC :
 
-## Configuration
-- `PC_STUDIO_WORKSPACE` : dossier de travail (défaut : `%USERPROFILE%\\PCStudioWorkspace`).
-- `COMFYUI_URL` : URL locale de ComfyUI (défaut : `http://127.0.0.1:8188`).
+- Python 3.11 : `C:\Program Files\Python311\python.exe`
+- Workspace : `C:\Users\7erro\PCStudioWorkspace`
+- Dépôt : `C:\Users\7erro\OneDrive\Documents\Codage\pcstudiocontrolchatgpt`
+- Bforartists, Audacity, DaVinci Resolve, FL Studio 2026, FFmpeg, FFprobe et Chrome.
+
+Ces chemins sont des paramètres locaux à cette machine. Si tu déplaces le dépôt ou réinstalles un logiciel, modifie `pc-studio.config.json` et les fichiers de configuration du client.
+
+> Le dépôt étant privé, la configuration de chemins demandée est versionnée. Ne place jamais de mot de passe, cookie, jeton OAuth, clé API ou secret dans Git, même dans un dépôt privé.
+
+## Installation
+
+1. Installer Python 3.11+.
+2. Cloner le dépôt.
+3. Lancer `INSTALL.bat`.
+4. Lancer `START.bat` pour vérifier l'environnement.
+5. Ajouter le serveur MCP à ton client avec le fichier de configuration correspondant.
+
+## ChatGPT Desktop / Codex
+
+Le fichier `client-config/chatgpt-codex.toml` contient le bloc TOML à ajouter à `%USERPROFILE%\.codex\config.toml` :
+
+```toml
+[mcp_servers.pc_studio_control]
+command = 'C:\Program Files\Python311\python.exe'
+args = ['C:\Users\7erro\OneDrive\Documents\Codage\pcstudiocontrolchatgpt\server.py']
+```
+
+Redémarre le client après modification et vérifie que le serveur MCP apparaît dans la liste des serveurs connectés. La disponibilité du MCP local dépend du client et de son mode d'exécution local ; ChatGPT Web dans un navigateur ne peut pas démarrer directement un processus sur ce PC.
+
+## ZCode Desktop
+
+Importer ou recopier `client-config/zcode-mcp.json` dans les paramètres **MCP Servers** de ZCode. Le transport est `stdio`. Redémarre ZCode après l'ajout.
 
 ## Outils MCP
-`studio_status`, `list_workspace`, `read_text_file`, `create_text_file`, `create_project_folder`, `launch_app`, `ffmpeg_run`, `comfyui_status`.
 
-## Sécurité et limites
-- Aucun shell générique / PowerShell arbitraire.
-- Aucun accès aux mots de passe, cookies, profils navigateur, clés privées ou dossiers hors workspace.
-- Pas de suppression ni d'écrasement de fichiers existants.
-- FFmpeg est limité au workspace et ne peut pas utiliser `-y`.
-- Publication, envoi, achat, installation et suppression restent des actions distinctes.
-- Contrôle souris/clavier universel et capture d'écran non inclus dans cette version.
+| Outil | Utilité |
+|---|---|
+| `studio_status` | Détecte les applications, outils média et chemins |
+| `launch_app` | Lance un logiciel autorisé |
+| `open_chrome_guest` | Ouvre Chrome en mode Invité, avec URL facultative |
+| `list_workspace` | Liste un dossier de travail |
+| `read_text_file` | Lit un fichier texte |
+| `create_text_file` | Crée un fichier sans écrasement |
+| `create_project_folder` | Crée un dossier de projet |
+| `ffmpeg_run` | Traite des médias locaux dans le workspace |
+| `ffprobe_file` | Lit les métadonnées d'un média |
+| `comfyui_status` | Vérifie ComfyUI sur localhost |
+
+### Exemples de demandes
+
+- « Ouvre Bforartists. »
+- « Ouvre Chrome en invité sur https://example.com. »
+- « Vérifie si ComfyUI est lancé. »
+- « Liste les fichiers de mon workspace. »
+- « Donne les informations techniques de video.mp4. »
+
+## Sécurité
+
+- Pas de shell générique, PowerShell arbitraire ou lancement de chemin d'exécutable fourni par l'utilisateur.
+- Les applications sont limitées à une liste autorisée.
+- Chrome est lancé avec `--guest` ; aucun cookie ou profil de navigation n'est lu par le serveur.
+- Les opérations de fichiers sont limitées à `PCStudioWorkspace`.
+- FFmpeg n'autorise pas les entrées réseau et n'écrase pas les sorties existantes.
+- ComfyUI doit rester accessible via localhost.
+- Aucun mot de passe, cookie, token ou secret ne doit être ajouté au dépôt.
 
 ## Dépannage
-- Python introuvable : installer Python 3.11+ et cocher “Add Python to PATH”.
-- FFmpeg introuvable : installer FFmpeg puis ajouter son dossier `bin` au PATH.
-- ComfyUI hors ligne : démarrer ComfyUI localement et vérifier `COMFYUI_URL`.
-- Le client MCP ne démarre pas le serveur : vérifier le chemin absolu vers `server.py`.
+
+- **Application introuvable** : vérifie le chemin correspondant dans `pc-studio.config.json`.
+- **Chrome absent** : installe Chrome ou corrige son chemin dans la configuration.
+- **FFmpeg/FFprobe absents** : vérifie le chemin Chocolatey et l'installation.
+- **ComfyUI hors ligne** : démarre ComfyUI et vérifie `http://127.0.0.1:8188`.
+- **MCP non connecté** : vérifie les chemins absolus Python et `server.py`, puis redémarre le client.
 
 Licence : MIT.
