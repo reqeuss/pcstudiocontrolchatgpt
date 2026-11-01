@@ -1,0 +1,13 @@
+{
+  "workspace": "C:/Users/7erro/PCStudioWorkspace",
+  "comfyui_url": "http://127.0.0.1:8188",
+  "paths": {
+    "bforartists": "C:/Program Files/Bforartists/5.1.2/bforartists.exe",
+    "audacity": "C:/Program Files/Audacity/Audacity.exe",
+    "davinci_resolve": "C:/Program Files/Blackmagic Design/DaVinci Resolve/Resolve.exe",
+    "fl_studio": "C:/Program Files/Image-Line/FL Studio 2026/FL64.exe",
+    "ffmpeg": "C:/ProgramData/chocolatey/bin/ffmpeg.exe",
+    "ffprobe": "C:/ProgramData/chocolatey/bin/ffprobe.exe",
+    "chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe"
+  }
+}
