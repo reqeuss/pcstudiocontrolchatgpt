@@ -1,0 +1,6 @@
+# PC Studio Control — ChatGPT Desktop / Codex MCP
+# Adapte uniquement le chemin du dépôt si tu le déplaces.
+
+[mcp_servers.pc_studio_control]
+command = 'C:\Program Files\Python311\python.exe'
+args = ['C:\Users\7erro\OneDrive\Documents\Codage\pcstudiocontrolchatgpt\server.py']
